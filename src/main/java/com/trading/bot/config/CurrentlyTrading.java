@@ -5,13 +5,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CurrentlyTrading {
 
-    private String coin = "BTC"; // default value
+    private String coinName = "Bitcoin"; // default value
 
-    public String getCoin() {
-        return coin;
+    public String getCoinName() {
+        return coinName;
     }
 
-    public void setCoin(String coin) {
-        this.coin = coin;
+    public void setCoinName(String coinName) {
+        this.coinName = coinName;
     }
 }
+

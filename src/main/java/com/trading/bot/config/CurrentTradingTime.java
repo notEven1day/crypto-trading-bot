@@ -1,4 +1,4 @@
-package com.trading.bot.component;
+package com.trading.bot.config;
 
 import org.springframework.stereotype.Component;
 

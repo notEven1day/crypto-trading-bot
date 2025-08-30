@@ -28,10 +28,11 @@ public class CurrencyService {
         if (coins != null) {
             for (Map<String, String> coin : coins) {
                 String symbol = coin.get("symbol").toUpperCase();
-                String coinId = coin.get("id");
+                String coinId = coin.get("id");       // this is unique, use as primary lookup
+                String name = coin.get("name");       // store for readability
 
-                // repository method inserts only if symbol doesn't exist
-                currencyRepository.insertIfNotExists(symbol, coinId);
+                // insert only if coingecko_id doesn't exist
+                currencyRepository.insertIfNotExists(symbol, coinId, name);
             }
         }
     }

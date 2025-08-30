@@ -15,19 +15,38 @@ public class CurrencyRepository {
     /**
      * Inserts a new currency only if symbol doesn't exist
      */
-    public void insertIfNotExists(String symbol, String coinId) {
+    public void insertIfNotExists(String symbol, String coinId, String name) {
+        String sql = "INSERT INTO currency (symbol, coingecko_id, name) " +
+                "VALUES (?, ?, ?) " +
+                "ON CONFLICT (coingecko_id) DO NOTHING";
 
-        String sql = "INSERT INTO currency (symbol, coingecko_id) " +
-                "VALUES (?, ?) " +
-                "ON CONFLICT (symbol) DO NOTHING";
-
-        if(symbol.length() <= 50 && coinId.length() <= 50) {
-            jdbcTemplate.update(sql, symbol, coinId);
+        if (symbol.length() <= 50 && coinId.length() <= 50 && name.length() <= 50) {
+            jdbcTemplate.update(sql, symbol, coinId, name);
         } else {
             // skip this currency
-            // might lose some test cryptos, but worth the loss
+            // avoids errors if symbol, id, or name is too long
         }
-
-
     }
+
+    public String getCoinGeckoIdByName(String name) {
+        return jdbcTemplate.queryForObject(
+                "SELECT coingecko_id FROM currency WHERE name = ?",
+                new Object[]{name},
+                String.class
+        );
+    }
+
+    public Long getCoinIdByName(String name) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id FROM currency WHERE name = ?",
+                new Object[]{name},
+                Long.class
+        );
+    }
+
+
+
+
+
 }
+

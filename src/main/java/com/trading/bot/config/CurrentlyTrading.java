@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CurrentlyTrading {
 
-    private String coinName = "Bitcoin"; // default value
+    private String coinName = "Bitcoin";       // default coin name
+    private String coinGeckoId = "bitcoin";    // default CoinGecko ID
 
     public String getCoinName() {
         return coinName;
@@ -14,5 +15,12 @@ public class CurrentlyTrading {
     public void setCoinName(String coinName) {
         this.coinName = coinName;
     }
-}
 
+    public String getCoinGeckoId() {
+        return coinGeckoId;
+    }
+
+    public void setCoinGeckoId(String coinGeckoId) {
+        this.coinGeckoId = coinGeckoId;
+    }
+}

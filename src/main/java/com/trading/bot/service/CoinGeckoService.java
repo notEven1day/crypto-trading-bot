@@ -45,24 +45,25 @@ public class CoinGeckoService {
      * @param from start time
      * @param to end time
      */
-    public Map<String, Object> getPriceHistory(String coinId, LocalDateTime from, LocalDateTime to) {
-        long fromTs = from.toEpochSecond(ZoneOffset.UTC);
-        long toTs = to.toEpochSecond(ZoneOffset.UTC);
-
-        String url = String.format(
-                "%s/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d",
-                API_BASE, coinId.toLowerCase(), fromTs, toTs
-        );
-
-        ResponseEntity<Map> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                buildHeaders(),
-                Map.class
-        );
-
-        return response.getBody();
-    }
+    //TODO: Might need to revert
+//    public Map<String, Object> getPriceHistory(String coinId, LocalDateTime from, LocalDateTime to) {
+//        long fromTs = from.toEpochSecond(ZoneOffset.UTC);
+//        long toTs = to.toEpochSecond(ZoneOffset.UTC);
+//
+//        String url = String.format(
+//                "%s/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d",
+//                API_BASE, coinId.toLowerCase(), fromTs, toTs
+//        );
+//
+//        ResponseEntity<Map> response = restTemplate.exchange(
+//                url,
+//                HttpMethod.GET,
+//                buildHeaders(),
+//                Map.class
+//        );
+//
+//        return response.getBody();
+//    }
 
     /**
      * Get the latest price (live mode)

@@ -3,6 +3,9 @@ package com.trading.bot.repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public class CurrencyRepository {
 
@@ -28,19 +31,20 @@ public class CurrencyRepository {
         }
     }
 
-    public String getCoinGeckoIdByName(String name) {
+    public Long getCoinIdByCoingeckoId(String coingeckoId) {
         return jdbcTemplate.queryForObject(
-                "SELECT coingecko_id FROM currency WHERE name = ?",
-                new Object[]{name},
-                String.class
+                "SELECT id FROM currency WHERE coingecko_id = ?",
+                new Object[]{coingeckoId},
+                Long.class
         );
     }
 
-    public Long getCoinIdByName(String name) {
-        return jdbcTemplate.queryForObject(
-                "SELECT id FROM currency WHERE name = ?",
-                new Object[]{name},
-                Long.class
+
+
+
+    public List<Map<String, Object>> findAllCurrencies() {
+        return jdbcTemplate.queryForList(
+                "SELECT name, symbol, coingecko_id FROM currency ORDER BY name ASC"
         );
     }
 

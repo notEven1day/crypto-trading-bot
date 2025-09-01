@@ -36,4 +36,7 @@ public class CurrencyService {
             }
         }
     }
+    public List<Map<String, Object>> getAllCurrencies() {
+        return currencyRepository.findAllCurrencies();
+    }
 }

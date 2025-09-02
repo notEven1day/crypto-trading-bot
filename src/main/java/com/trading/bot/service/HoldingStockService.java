@@ -17,18 +17,21 @@ public class HoldingStockService {
     private final CurrentlyTrading currentlyTrading;
 
     private static final double INVESTMENT_USD = 100.0;
+    private final WalletService walletService;
 
     public HoldingStockService(HoldingStockRepository holdingRepo,
                                TradeRepository tradeRepo,
                                PriceHistoryRepository priceHistoryRepo,
-                               CurrentlyTrading currentlyTrading) {
+                               CurrentlyTrading currentlyTrading, WalletService walletService) {
         this.holdingRepo = holdingRepo;
         this.tradeRepo = tradeRepo;
         this.priceHistoryRepo = priceHistoryRepo;
         this.currentlyTrading = currentlyTrading;
+        this.walletService = walletService;
     }
 
     //TODO: need to check if we got enough funds before buying. if we dont have continue
+    //TODO: correct logic for live trading need to touch it a little so it works for training mode also
     public void buy(Long coinId) {
         // get latest price of the coin from price_history
         Double latestPrice = priceHistoryRepo.findLatestPrice(coinId);
@@ -48,7 +51,7 @@ public class HoldingStockService {
             double newAvg = ((oldAvg * oldQty) + (latestPrice * quantity)) / newQty;
             holdingRepo.update(coinId, newAvg, newQty);
         }
-
+        walletService.updateFunds(Long.valueOf(1),latestPrice*quantity,"BUY");
         tradeRepo.saveTrade(coinId, latestPrice, quantity, "BUY", null, "SUCCESS");
     }
 
@@ -70,6 +73,7 @@ public class HoldingStockService {
         holdingRepo.update(coinId, oldAvg, newQty);
 
         double profit = (latestPrice - oldAvg) * quantity;
-        tradeRepo.saveTrade(coinId, latestPrice, quantity, "SELL", profit, "COMPLETED");
+        walletService.updateFunds(Long.valueOf(1),profit,"SELL");
+        tradeRepo.saveTrade(coinId, latestPrice, quantity, "SELL", profit, "SUCCESS");
     }
 }

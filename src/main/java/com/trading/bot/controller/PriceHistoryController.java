@@ -23,7 +23,7 @@ public class PriceHistoryController {
         priceHistoryService.startTracking();
         return "Tracking started for " + currentlyTrading.getCoinName() + "";
     }
-    //coingecko limits requests if day>1 to once everyday so we cant reuse the normal trading logic
+    //closest we can get to 35 seconds price update from coingecko free api is 1 min from yesterday
     @PostMapping("/backfill/yesterday")
     public String backfillYesterday() {
         priceHistoryService.backfillYesterday();

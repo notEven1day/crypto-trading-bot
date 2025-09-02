@@ -21,7 +21,7 @@ public class CoinGeckoService {
 
     private HttpEntity<String> buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("x-cg-pro-api-key", apiKey);
+        headers.set("x-cg-demo-api-key", apiKey);
         return new HttpEntity<>(headers);
     }
 

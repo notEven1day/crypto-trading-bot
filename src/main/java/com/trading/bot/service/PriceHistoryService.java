@@ -118,4 +118,31 @@ public class PriceHistoryService {
         }
     }
 
+    public void backfillLastYearToYesterday() {
+        String coingeckoId = currentlyTrading.getCoinGeckoId();
+        Long coinId = currencyRepository.getCoinIdByCoingeckoId(coingeckoId);
+
+        long now = Instant.now().getEpochSecond();
+        long yesterday = now - (24L * 60 * 60); // cutoff at yesterday
+        long oneYearAgo = yesterday - (364L * 24 * 60 * 60); // 1 year before yesterday
+
+        String url = "https://api.coingecko.com/api/v3/coins/" + coingeckoId +
+                "/market_chart/range?vs_currency=usd&from=" + oneYearAgo + "&to=" + yesterday;
+
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+        if (response == null || !response.containsKey("prices")) return;
+
+        List<List<Object>> prices = (List<List<Object>>) response.get("prices");
+
+        for (List<Object> entry : prices) {
+            long timestampMs = ((Number) entry.get(0)).longValue();
+            double price = ((Number) entry.get(1)).doubleValue();
+
+            LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampMs), ZoneOffset.UTC);
+
+            priceHistoryRepository.insertPrice(coinId, price, time);
+        }
+    }
+
+
 }

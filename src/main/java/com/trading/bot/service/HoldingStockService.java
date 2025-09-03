@@ -1,5 +1,6 @@
 package com.trading.bot.service;
 
+import com.trading.bot.config.CurrentTradingTime;
 import com.trading.bot.repository.HoldingStockRepository;
 import com.trading.bot.repository.TradeRepository;
 import com.trading.bot.repository.PriceHistoryRepository;
@@ -15,6 +16,7 @@ public class HoldingStockService {
     private final TradeRepository tradeRepo;
     private final PriceHistoryRepository priceHistoryRepo;
     private final CurrentlyTrading currentlyTrading;
+    private final CurrentTradingTime currentTradingTime;
 
     private static final double INVESTMENT_USD = 100.0;
     private final WalletService walletService;
@@ -22,11 +24,12 @@ public class HoldingStockService {
     public HoldingStockService(HoldingStockRepository holdingRepo,
                                TradeRepository tradeRepo,
                                PriceHistoryRepository priceHistoryRepo,
-                               CurrentlyTrading currentlyTrading, WalletService walletService) {
+                               CurrentlyTrading currentlyTrading, CurrentTradingTime currentTradingTime, WalletService walletService) {
         this.holdingRepo = holdingRepo;
         this.tradeRepo = tradeRepo;
         this.priceHistoryRepo = priceHistoryRepo;
         this.currentlyTrading = currentlyTrading;
+        this.currentTradingTime = currentTradingTime;
         this.walletService = walletService;
     }
 
@@ -34,7 +37,7 @@ public class HoldingStockService {
     //TODO: correct logic for live trading need to touch it a little so it works for training mode also
     public void buy(Long coinId) {
         // get latest price of the coin from price_history
-        Double latestPrice = priceHistoryRepo.findLatestPrice(coinId);
+        Double latestPrice = priceHistoryRepo.findLatestPrice(coinId,currentTradingTime.getCurrentTime());
         if (latestPrice == null) return;
 
         // calculate quantity based on 100 USD
@@ -56,7 +59,7 @@ public class HoldingStockService {
     }
 
     public void sell(Long coinId) {
-        Double latestPrice = priceHistoryRepo.findLatestPrice(coinId);
+        Double latestPrice = priceHistoryRepo.findLatestPrice(coinId,currentTradingTime.getCurrentTime());
         if (latestPrice == null) return;
 
         Map<String, Object> holding = holdingRepo.findByCoinId(coinId);

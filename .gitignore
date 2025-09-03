@@ -22,3 +22,9 @@
 /.gradle/ 
 # Compiled class files 
 *.class 
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.idea/
+*.log
+

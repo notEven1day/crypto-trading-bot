@@ -3,6 +3,7 @@ package com.trading.bot.repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -60,21 +61,40 @@ public class PriceHistoryRepository {
     }
 
 
-    public Double findLatestPrice(Long coinId) {
+//    public Double findLatestPrice(Long coinId) {
+//        String sql = """
+//            SELECT price
+//            FROM price_history
+//            WHERE currency_id = ?
+//            ORDER BY timestamp DESC
+//            LIMIT 1
+//        """;
+//
+//        return jdbcTemplate.query(sql, rs -> {
+//            if (rs.next()) {
+//                return rs.getDouble("price");
+//            }
+//            return null;
+//        }, coinId);
+//    }
+
+    public Double findLatestPrice(Long coinId, LocalDateTime currentTradingTime) {
         String sql = """
-            SELECT price
-            FROM price_history
-            WHERE currency_id = ?
-            ORDER BY timestamp DESC
-            LIMIT 1
-        """;
+        SELECT price
+        FROM price_history
+        WHERE currency_id = ?
+          AND timestamp < ?
+        ORDER BY timestamp DESC
+        LIMIT 1
+    """;
 
         return jdbcTemplate.query(sql, rs -> {
             if (rs.next()) {
                 return rs.getDouble("price");
             }
             return null;
-        }, coinId);
+        }, coinId, Timestamp.valueOf(currentTradingTime));
     }
+
 
 }

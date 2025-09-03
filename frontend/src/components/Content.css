@@ -1,0 +1,17 @@
+
+.content {
+    display: flex;
+    height: 1000px;
+    flex-direction: column; /* keep picker on top, buttons below */
+    align-items: center;
+    gap: 2rem;
+    background-color: #655858;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row; /* buttons side by side */
+    gap: 1rem; /* space between buttons */
+}
